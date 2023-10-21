@@ -52,7 +52,7 @@ You can store 16-bit signed variables at the end of the code by prefixing them w
 The compiler is, admittedly, poorly-written. It WILL compile garbage if provided garbage.
 
 ## Example program
-The following program is a simple for-loop that prints all signed 16-bit integers.
+The following program is a simple for-loop that prints all signed 16-bit integers up to 32766.
 ```
 MOV R4 10
 MOV R5 11
