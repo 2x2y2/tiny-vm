@@ -188,7 +188,7 @@ void eval(uint16_t instruction) {
 
 int main(int argc, char** argv) {
 	if (argc != 2) {
-		printf("usage: tiny-vm <binary>\n");
+		printf("usage: ./tiny-vm <binary>\n");
 		exit(1);
 	}
 
