@@ -56,13 +56,13 @@ uint16_t str_to_opcode(char* str) {
 // this really could be cleaner but uhmmm uhhh well uhhh
 void compile(const char* src, const char* out) {
 	FILE* source = fopen(src, "r");
-	if (source == NULL) {
+	if (!source) {
 		printf("[fail] couldn't open %s\n", src);
 		exit(1);
 	}
 
 	FILE* output = fopen(out, "wb");
-	if (output == NULL) {
+	if (!output) {
 		printf("[fail] couldn't open %s\n", out);
 	}
 

@@ -193,7 +193,7 @@ int main(int argc, char** argv) {
 	}
 
 	FILE* bin = fopen(argv[1], "rb");
-	if (bin == NULL) {
+	if (!bin) {
 		printf("[fail] couldn't open %s\n", argv[1]);
 		exit(1);
 	}
