@@ -37,7 +37,7 @@ POP     | r or nothing                  | pops the stack (into r if specified)
 MOV     | r1, r2 or signed imm8         | r1 = (r2 or signed imm8)
 LDR     | r1, r2                        | r1 = mem[r2]
 STR     | r1, r2                        | mem[r1] = r2
-ADD     | r1, r2, r3 or imm5            | r1 = r2 + (r3 or imm5)
+ADD     | r1, r2, r3 or signed imm5     | r1 = r2 + (r3 or imm5)
 AND     | r1, r2, r3                    | r1 = r2 AND r3
 NOT     | r1, r2, r3                    | r1 = r2 NOT r3
 CMP     | r1, r2                        | signed comparison of r1 and r2 (result stored in FLAG)
