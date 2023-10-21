@@ -434,7 +434,7 @@ void compile(const char* src, const char* out) {
 
 int main(int argc, char** argv) {
 	if (argc != 3) {
-		printf("usage: comp <src> <dst>\n");
+		printf("usage: ./tiny-comp <source> <output>\n");
 		exit(1);
 	}
 
