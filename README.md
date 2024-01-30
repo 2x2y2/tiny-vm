@@ -6,7 +6,8 @@ A tiny 16-bit virtual machine running its own tiny assembly written in C.
 ```shell
 make
 ./tiny-assembler <source> <output>
-./tiny-vm <binary>```
+./tiny-vm <binary>
+```
 
 ## Architecture
 Memory:
