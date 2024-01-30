@@ -3,9 +3,10 @@
 A tiny 16-bit virtual machine running its own tiny assembly written in C.
 
 ## How to use
-`./tiny-comp <source> <output>`
-
-`./tiny-vm <binary>`
+```shell
+make
+./tiny-assembler <source> <output>
+./tiny-vm <binary>```
 
 ## Architecture
 Memory:
@@ -44,12 +45,12 @@ CMP     | r1, r2                        | signed comparison of r1 and r2 (result
 PRNT    | r                             | prints out r to stdout
 STOP    | nothing                       | halts program execution
 
-## tiny-comp
-Compiles your code in tiny-assembly to binary format.
+## tiny-assembler
+Assembles your code in tiny-assembly to binary format.
 
 You can store 16-bit signed variables at the end of the code by prefixing them with a dot (and reference them in code by their address).
 
-The compiler is, admittedly, poorly-written. It WILL compile garbage if provided garbage.
+The assembler is, admittedly, poorly-written. It WILL compile garbage if provided garbage.
 
 ## Example program
 The following program is a simple for-loop that prints all signed 16-bit integers up to 32766.

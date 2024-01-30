@@ -54,7 +54,7 @@ uint16_t str_to_opcode(char* str) {
 }
 
 // this really could be cleaner but uhmmm uhhh well uhhh
-void compile(const char* src, const char* out) {
+void assemble(const char* src, const char* out) {
 	FILE* source = fopen(src, "r");
 	if (!source) {
 		printf("[fail] couldn't open %s\n", src);
@@ -71,7 +71,7 @@ void compile(const char* src, const char* out) {
 	uint32_t line = 0;
 	while (fgets(line_buff, sizeof(line_buff), source)) {
 		line++;
-		uint16_t compiled = 0;
+		uint16_t assembled = 0;
 		uint32_t line_len = strlen(line_buff);
 		if (line_buff[line_len-1] == '\n')
 			line_buff[line_len-1] = '\0';
@@ -95,340 +95,340 @@ void compile(const char* src, const char* out) {
 		tok = __strtok_r(NULL, " ", &rest);
 		switch (opcode) {
 			case JMP: {
-				compiled |= JMP << 12;
+				assembled |= JMP << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 					uint32_t addr = atoi(tok);
 					if (addr & mask(15, 17)) {
 						printf("[l%d] JMP immediate value must be in range [0;2047]\n", line);
 						exit(1);
 					}
-					compiled |= addr & mask(0, 11);
+					assembled |= addr & mask(0, 11);
 				} } break;
 			case JEQ: {
-				compiled |= JEQ << 12;
+				assembled |= JEQ << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 					uint32_t addr = atoi(tok);
 					if (addr & mask(15, 17)) {
 						printf("[l%d] JEQ immediate value must be in range [0;2047]\n", line);
 						exit(1);
 					}
-					compiled |= addr & mask(0, 11);
+					assembled |= addr & mask(0, 11);
 				} } break;
 			case JNE: {
-				compiled |= JNE << 12;
+				assembled |= JNE << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 					uint32_t addr = atoi(tok);
 					if (addr & mask(15, 17)) {
 						printf("[l%d] JNE immediate value must be in range [0;2047]\n", line);
 						exit(1);
 					}
-					compiled |= addr & mask(0, 11);
+					assembled |= addr & mask(0, 11);
 				} } break;
 			case JLT: {
-				compiled |= JLT << 12;
+				assembled |= JLT << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 					uint32_t addr = atoi(tok);
 					if (addr & mask(15, 17)) {
 						printf("[l%d] JLT immediate value must be in range [0;2047]\n", line);
 						exit(1);
 					}
-					compiled |= addr & mask(0, 11);
+					assembled |= addr & mask(0, 11);
 				} } break;
 			case JGT: {
-				compiled |= JGT << 12;
+				assembled |= JGT << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 					uint32_t addr = atoi(tok);
 					if (addr & mask(15, 17)) {
 						printf("[l%d] JGT immediate value must be in range [0;2047]\n", line);
 						exit(1);
 					}
-					compiled |= addr & mask(0, 11);
+					assembled |= addr & mask(0, 11);
 				} } break;
 			case PSH: {
-				compiled |= PSH << 12;
+				assembled |= PSH << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 					int val = atoi(tok);
 					if (val > 1023 || val < -1024) {
 						printf("[l%d] PSH immediate value must be in range [-1024;1023]\n", line);
 						exit(1);
 					}
-					compiled |= val & mask(0, 11);;
+					assembled |= val & mask(0, 11);;
 				} } break;
 			case POP: {
-				compiled |= POP << 12;
+				assembled |= POP << 12;
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(11, 1);
+					assembled |= mask(11, 1);
 				} } break;
 			case MOV: {
-				compiled |= MOV << 12;
+				assembled |= MOV << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(8, 1);
+					assembled |= mask(8, 1);
 					int val = atoi(tok);
 					if (val > 127 || val < -128) {
 						printf("[l%d] MOV immediate value must be in range [-128;127]\n", line);
 						exit(1);
 					}
-					compiled |= val & 0xff;
+					assembled |= val & 0xff;
 				} } break;
 			case STR: {
-				compiled |= STR << 12;
+				assembled |= STR << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3));
+					assembled |= ((tok[1] - 48) & mask(0, 3));
 				} } break;
 			case LDR: {
-				compiled |= LDR << 12;
+				assembled |= LDR << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3));
+					assembled |= ((tok[1] - 48) & mask(0, 3));
 				} } break;
 			case ADD: {
-				compiled |= ADD << 12;
+				assembled |= ADD << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 6;
+					assembled |= _SP << 6;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 6;
+					assembled |= _IP << 6;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 6;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 6;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'R') {
-					compiled |= (tok[1] - 48) & mask(0, 3);
+					assembled |= (tok[1] - 48) & mask(0, 3);
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= mask(5, 1);
+					assembled |= mask(5, 1);
 					int val = atoi(tok);
 					if (val > 15 || val < -16) {
 						printf("[l%d] ADD immediate value must be in range [-15;16]\n", line);
 						exit(1);
 					}
-					compiled |= ((uint16_t)val & mask(0, 5));
+					assembled |= ((uint16_t)val & mask(0, 5));
 				} } break;
 			case AND: {
-				compiled |= AND << 12;
+				assembled |= AND << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 3;
+					assembled |= _SP << 3;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 3;
+					assembled |= _IP << 3;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 3;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 3;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3));
+					assembled |= ((tok[1] - 48) & mask(0, 3));
 				} } break;
 			case NOT: {
-				compiled |= NOT << 12;
+				assembled |= NOT << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3));
+					assembled |= ((tok[1] - 48) & mask(0, 3));
 				} } break;
 			case CMP: {
-				compiled |= CMP << 12;
+				assembled |= CMP << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP << 9;
+					assembled |= _SP << 9;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP << 9;
+					assembled |= _IP << 9;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3)) << 9;
+					assembled |= ((tok[1] - 48) & mask(0, 3)) << 9;
 				}
 				tok = __strtok_r(NULL, " ", &rest);
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3));
+					assembled |= ((tok[1] - 48) & mask(0, 3));
 				} } break;
 			case PRNT:
-				compiled |= PRNT << 12;
+				assembled |= PRNT << 12;
 				if (strlen(tok) == 2 && tok[0] == 'S') {
-					compiled |= _SP;
+					assembled |= _SP;
 				}
 				else if (strlen(tok) == 2 && tok[0] == 'I') {
-					compiled |= _IP;
+					assembled |= _IP;
 				}
 				else {
-					compiled |= ((tok[1] - 48) & mask(0, 3));
+					assembled |= ((tok[1] - 48) & mask(0, 3));
 				} break;
 			case STOP:
-				compiled |= mask(0, 16);
+				assembled |= mask(0, 16);
 				break;
 		}
-		fwrite(&compiled, 1, sizeof(uint16_t), output);
+		fwrite(&assembled, 1, sizeof(uint16_t), output);
 	}
 }
 
@@ -438,7 +438,7 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	compile(argv[1], argv[2]);
+	assemble(argv[1], argv[2]);
 	return 0;
 }
 
